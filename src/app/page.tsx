@@ -1,3 +1,5 @@
+import DataTableWrapper from "./_components/DataTableWrapper";
+
 const HomePage = () => {
   return (
     <div className="border rounded-md border-gray-300 h-full p-4">
@@ -5,6 +7,7 @@ const HomePage = () => {
       <p className="text-gray-600 text-sm mt-2">
         Recently created CDN distribution from this organization.
       </p>
+      <DataTableWrapper />
     </div>
   );
 };
