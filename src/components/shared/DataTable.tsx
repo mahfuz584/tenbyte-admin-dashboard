@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -16,25 +15,42 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  classes?: {
-    wrapper?: string;
-  };
-}
+import { DataTableProps } from "../types";
 
 const DataTable = <TData, TValue>({
   data,
   classes,
   columns,
+  pageSize,
+  pageIndex,
+  isLoading,
+  onPageChange,
+  onPageSizeChange,
 }: DataTableProps<TData, TValue>) => {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    state: {
+      pagination: {
+        pageIndex,
+        pageSize,
+      },
+    },
+    manualPagination: true,
+    onPaginationChange: (updater) => {
+      const next =
+        typeof updater === "function"
+          ? updater({ pageIndex, pageSize })
+          : updater;
+      onPageChange(next.pageIndex);
+      onPageSizeChange(next.pageSize);
+    },
   });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className={cn("overflow-hidden rounded-md border", classes?.wrapper)}>

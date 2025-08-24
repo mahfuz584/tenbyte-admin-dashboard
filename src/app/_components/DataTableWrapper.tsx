@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 
+import CustomPagination from "@/components/shared/CustomPagination";
 import {
   CheckCircleIcon,
   ClockIcon,
@@ -14,6 +15,7 @@ import {
   XCircleIcon,
 } from "@heroicons/react/16/solid";
 import dayjs from "dayjs";
+import { useState } from "react";
 import { Distribution, DistributionResponse, Status } from "./types";
 
 export const columns: ColumnDef<Distribution>[] = [
@@ -22,7 +24,7 @@ export const columns: ColumnDef<Distribution>[] = [
     header: "Label",
   },
   {
-    accessorKey: "domain",
+    accessorKey: "cname",
     header: "Domain",
   },
   {
@@ -43,7 +45,7 @@ export const columns: ColumnDef<Distribution>[] = [
         );
 
       return (
-        <Button variant="outline">
+        <Button variant="outline" size="sm">
           {statusIcon}
           <span className="capitalize">{status}</span>
         </Button>
@@ -58,7 +60,6 @@ export const columns: ColumnDef<Distribution>[] = [
     },
   },
   {
-    // accessorKey: "created_at",
     header: "Time Modified",
     cell: ({ getValue }) => {
       const date = getValue<Date>();
@@ -68,9 +69,20 @@ export const columns: ColumnDef<Distribution>[] = [
 ];
 
 const DataTableWrapper = () => {
+  const [pageIndex, setPageIndex] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  console.log({
+    pageIndex,
+    pageSize,
+  });
+
   const { data, error, isLoading } = useQuery({
-    queryKey: ["distributions"],
-    queryFn: () => getData<DistributionResponse>("/distributions"),
+    queryKey: ["distributions", pageIndex, pageSize],
+    queryFn: () =>
+      getData<DistributionResponse>(
+        `/distributions?page=${pageIndex}&limit=${pageSize}`
+      ),
   });
 
   if (isLoading) {
@@ -81,7 +93,33 @@ const DataTableWrapper = () => {
     return <div>Error loading data</div>;
   }
 
-  return <DataTable columns={columns} data={data.data} />;
+  return (
+    <>
+      <DataTable
+        data={data.data}
+        columns={columns}
+        pageSize={pageSize}
+        pageIndex={pageIndex}
+        isLoading={isLoading}
+        onPageChange={setPageIndex}
+        pageCount={data.meta.pagination.total_pages}
+        onPageSizeChange={(size) => {
+          setPageSize(size);
+          setPageIndex(pageIndex);
+        }}
+        classes={{
+          wrapper: "w-full my-10",
+        }}
+      />
+      <CustomPagination
+        pageSize={pageSize}
+        pageIndex={pageIndex}
+        onPageChange={setPageIndex}
+        onPageSizeChange={setPageSize}
+        pageCount={data.meta.pagination.total_pages}
+      />
+    </>
+  );
 };
 
 export default DataTableWrapper;
