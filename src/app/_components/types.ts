@@ -27,6 +27,6 @@ export type DistributionResponse = {
   data: Distribution[];
   meta: {
     links: PaginationLinks;
-    meta: PaginationMeta;
+    pagination: PaginationMeta;
   };
 };
