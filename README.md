@@ -85,7 +85,7 @@ No authentication is required.
 📷 Demo (Optional)
 
 Live Deployment: https://tenbyte-admin-dashboard.vercel.app/
-ScreenShots : Default filters or sorting may apply if API doesn’t provide them.<img width="1918" height="1041" alt="Screenshot 2025-08-25 at 8 56 58 PM" src="https://github.com/user-attachments/assets/b67f3246-48c6-458d-b25e-2dac78a9e2b4" />
+ScreenShots :<img width="1918" height="1041" alt="Screenshot 2025-08-25 at 8 56 58 PM" src="https://github.com/user-attachments/assets/b67f3246-48c6-458d-b25e-2dac78a9e2b4" />
 <img width="1918" height="1041" alt="Screenshot 2025-08-25 at 8 56 48 PM" src="https://github.com/user-attachments/assets/b4bb286c-2730-4354-b1f3-46f307853048" />
 <img width="1918" height="1041" alt="Screenshot 2025-08-25 at 8 56 33 PM" src="https://github.com/user-attachments/assets/1cc9771b-705c-4325-bfe6-3f7e45e9c036" />
 <img width="1918" height="1041" alt="Screenshot 2025-08-25 at 8 57 04 PM" src="https://github.com/user-attachments/assets/45e31fb5-73af-40f2-ae34-284687dbe490" />
