@@ -24,7 +24,7 @@ const CustomPagination = ({
   onPageSizeChange,
 }: PaginationProps) => {
   return (
-    <div className="mt-4 flex items-center justify-end gap-10">
+    <div className="flex items-center justify-end gap-10">
       <Select onValueChange={(value) => onPageSizeChange(Number(value))}>
         <SelectTrigger className="w-fit">
           <SelectValue placeholder={pageSize} />

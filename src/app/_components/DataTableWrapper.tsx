@@ -177,7 +177,7 @@ const DataTableWrapper = () => {
   });
 
   return (
-    <>
+    <div className="flex flex-col gap-4 min-h-[87vh]">
       <Filters
         search={search}
         status={status}
@@ -201,7 +201,9 @@ const DataTableWrapper = () => {
           setPageSize(size);
           setPageIndex(pageIndex);
         }}
-        classes={{ wrapper: "w-full my-10" }}
+        classes={{
+          wrapper: "flex-1",
+        }}
       />
       <CustomPagination
         pageSize={pageSize}
@@ -210,7 +212,7 @@ const DataTableWrapper = () => {
         onPageSizeChange={setPageSize}
         pageCount={data?.meta.pagination.total_pages ?? 0}
       />
-    </>
+    </div>
   );
 };
 
