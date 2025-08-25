@@ -10,6 +10,7 @@ export const buildQueryParams = (options: {
   limit?: number;
   search?: string;
   status?: string[];
+  dateRange?: string;
   priority?: string[];
 }) => {
   const params: Record<string, string | number> = {};
@@ -27,6 +28,10 @@ export const buildQueryParams = (options: {
 
   if (options.priority?.length) {
     params["filter[priority][in]"] = options.priority.join(",");
+  }
+
+  if (options.dateRange) {
+    params["filter[created_at][between]"] = options.dateRange;
   }
 
   return params;

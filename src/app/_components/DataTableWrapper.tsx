@@ -22,7 +22,7 @@ import {
   parseAsString,
   useQueryState,
 } from "nuqs";
-import Filters from "./Filters";
+import Filters from "../../components/shared/Filters";
 import { Distribution, DistributionResponse, Status } from "./types";
 
 export const columns: ColumnDef<Distribution>[] = [
@@ -101,8 +101,21 @@ const DataTableWrapper = () => {
     parseAsString.withDefault("")
   );
 
+  const [dateRange, setDateRange] = useQueryState(
+    "dateRange",
+    parseAsString.withDefault("")
+  );
+
   const { data, error, isLoading } = useQuery({
-    queryKey: ["distributions", pageIndex, pageSize, status, priority, search],
+    queryKey: [
+      "distributions",
+      pageIndex,
+      pageSize,
+      status,
+      priority,
+      search,
+      dateRange,
+    ],
 
     queryFn: () => {
       const params = buildQueryParams({
@@ -111,6 +124,7 @@ const DataTableWrapper = () => {
         search,
         status,
         priority,
+        dateRange,
       });
 
       return getData<DistributionResponse>("/distributions", params);
@@ -133,7 +147,9 @@ const DataTableWrapper = () => {
         priority={priority}
         setSearch={setSearch}
         setStatus={setStatus}
+        dateRange={dateRange}
         setPriority={setPriority}
+        setDateRange={setDateRange}
       />
       <DataTable
         data={data.data}

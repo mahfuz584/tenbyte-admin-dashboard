@@ -39,7 +39,7 @@ const CustomPagination = ({
       </Select>
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium">
-          Page {pageIndex} of {pageCount}
+          Page {pageIndex} of {pageCount - 1}
         </span>
         <Button
           size="sm"
