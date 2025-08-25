@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import DataTableWrapper from "./_components/DataTableWrapper";
 
 const HomePage = () => {
@@ -7,7 +8,9 @@ const HomePage = () => {
       <p className="text-gray-600 text-sm mt-2">
         Recently created CDN distribution from this organization.
       </p>
-      <DataTableWrapper />
+      <Suspense>
+        <DataTableWrapper />
+      </Suspense>
     </div>
   );
 };
