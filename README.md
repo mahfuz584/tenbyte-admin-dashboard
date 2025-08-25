@@ -48,6 +48,7 @@ Built with shadcn/ui components
 
 Data fetching and caching with React Query
 
+---
 
 🛠 Approach
 
@@ -69,6 +70,7 @@ Styled UI using shadcn/ui and Tailwind CSS.
 
 Ensured responsiveness and tested across devices.
 
+---
 
 📌 Assumptions
 
@@ -78,6 +80,7 @@ Pagination and filtering are handled client-side for demo purposes.
 
 No authentication is required.
 
+---
 
 📷 Demo (Optional)
 
