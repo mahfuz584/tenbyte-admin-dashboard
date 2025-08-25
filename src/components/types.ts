@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 
 export type DataTableProps<TData, TValue> = {
   data: TData[];
+  error: Error | null;
   pageSize: number;
   pageCount: number;
   pageIndex: number;
@@ -17,7 +18,7 @@ export type DataTableProps<TData, TValue> = {
 
 export type PaginationProps<TData = unknown, TValue = unknown> = Omit<
   DataTableProps<TData, TValue>,
-  "columns" | "data" | "classes" | "isLoading"
+  "columns" | "data" | "classes" | "isLoading" | "error"
 >;
 
 export type FilterProps = {
