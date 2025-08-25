@@ -1,4 +1,4 @@
-# Responsive Data Table
+# Tenbyte admin dashboard
 
 A responsive data table built with **Next.js 15**, **React Query**, **Nuqs**, and **shadcn/ui**.  
 Includes filtering, pagination, and responsive design.
@@ -87,6 +87,6 @@ ScreenShots : Default filters or sorting may apply if API doesn’t provide them
 <img width="1918" height="1041" alt="Screenshot 2025-08-25 at 8 56 33 PM" src="https://github.com/user-attachments/assets/1cc9771b-705c-4325-bfe6-3f7e45e9c036" />
 <img width="1918" height="1041" alt="Screenshot 2025-08-25 at 8 57 04 PM" src="https://github.com/user-attachments/assets/45e31fb5-73af-40f2-ae34-284687dbe490" />
 <img width="1918" height="1041" alt="Screenshot 2025-08-25 at 8 56 26 PM" src="https://github.com/user-attachments/assets/586ff973-21e8-4203-9a5f-4f67e52028b8" />
-<img width="657" height="488" alt="Screenshot 2025-08-25 at 4 52 03 PM" src="https://github.com/user-attachments/assets/d12875b7-cdd3-40e4-81b4-ac6d7c1e6324" />
+
 
 
