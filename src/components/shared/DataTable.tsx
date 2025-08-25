@@ -54,7 +54,7 @@ const DataTable = <TData, TValue>({
 
   return (
     <div className={cn("overflow-hidden rounded-md border", classes?.wrapper)}>
-      <Table>
+      <Table className="table-fixed w-full">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>

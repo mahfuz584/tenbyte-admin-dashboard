@@ -9,7 +9,15 @@ const api = axios.create({
   timeout: 10000,
 });
 
-export const getData = async <T>(endpoint: string): Promise<T> => {
-  const response = await api.get<T>(endpoint);
+export const getData = async <T>(
+  endpoint: string,
+  params?: Record<string, unknown>
+): Promise<T> => {
+  console.log({
+    endpoint,
+    params,
+  });
+  const response = await api.get<T>(endpoint, { params });
+  console.log("🚀 ~ getData ~ response:", response);
   return response.data;
 };

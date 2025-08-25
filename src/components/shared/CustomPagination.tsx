@@ -29,7 +29,7 @@ const CustomPagination = ({
         <SelectTrigger className="w-fit">
           <SelectValue placeholder={pageSize} />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent position="popper">
           {pageSizes.map((size) => (
             <SelectItem key={size} value={size.toString()}>
               {size}

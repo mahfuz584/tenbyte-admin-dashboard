@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 
 import CustomPagination from "@/components/shared/CustomPagination";
+import { buildQueryParams } from "@/lib/utils";
 import {
   CheckCircleIcon,
   ClockIcon,
@@ -15,7 +16,13 @@ import {
   XCircleIcon,
 } from "@heroicons/react/16/solid";
 import dayjs from "dayjs";
-import { useState } from "react";
+import {
+  parseAsArrayOf,
+  parseAsInteger,
+  parseAsString,
+  useQueryState,
+} from "nuqs";
+import Filters from "./Filters";
 import { Distribution, DistributionResponse, Status } from "./types";
 
 export const columns: ColumnDef<Distribution>[] = [
@@ -69,20 +76,45 @@ export const columns: ColumnDef<Distribution>[] = [
 ];
 
 const DataTableWrapper = () => {
-  const [pageIndex, setPageIndex] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageIndex, setPageIndex] = useQueryState(
+    "page",
+    parseAsInteger.withDefault(1)
+  );
 
-  console.log({
-    pageIndex,
-    pageSize,
-  });
+  const [pageSize, setPageSize] = useQueryState(
+    "limit",
+    parseAsInteger.withDefault(10)
+  );
+
+  const [status, setStatus] = useQueryState(
+    "status",
+    parseAsArrayOf(parseAsString).withDefault([])
+  );
+
+  const [priority, setPriority] = useQueryState(
+    "priority",
+    parseAsArrayOf(parseAsString).withDefault([])
+  );
+
+  const [search, setSearch] = useQueryState(
+    "search",
+    parseAsString.withDefault("")
+  );
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ["distributions", pageIndex, pageSize],
-    queryFn: () =>
-      getData<DistributionResponse>(
-        `/distributions?page=${pageIndex}&limit=${pageSize}`
-      ),
+    queryKey: ["distributions", pageIndex, pageSize, status, priority, search],
+
+    queryFn: () => {
+      const params = buildQueryParams({
+        page: pageIndex,
+        limit: pageSize,
+        search,
+        status,
+        priority,
+      });
+
+      return getData<DistributionResponse>("/distributions", params);
+    },
   });
 
   if (isLoading) {
@@ -95,6 +127,14 @@ const DataTableWrapper = () => {
 
   return (
     <>
+      <Filters
+        search={search}
+        status={status}
+        priority={priority}
+        setSearch={setSearch}
+        setStatus={setStatus}
+        setPriority={setPriority}
+      />
       <DataTable
         data={data.data}
         columns={columns}

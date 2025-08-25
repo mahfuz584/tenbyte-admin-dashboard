@@ -27,11 +27,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen max-w-7xl mx-auto`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
-        <ReactQueryProvider>
-          <NuqsAdapter>{children}</NuqsAdapter>
-        </ReactQueryProvider>
+        <div className="max-w-7xl mx-auto w-full">
+          <ReactQueryProvider>
+            <NuqsAdapter>{children}</NuqsAdapter>
+          </ReactQueryProvider>
+        </div>
       </body>
     </html>
   );
