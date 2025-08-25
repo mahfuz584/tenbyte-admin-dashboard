@@ -25,86 +25,131 @@ import {
 import Filters from "../../components/shared/Filters";
 import { Distribution, DistributionResponse, Status } from "./types";
 
-export const columns: ColumnDef<Distribution>[] = [
-  {
-    accessorKey: "name",
-    header: "Label",
-  },
-  {
-    accessorKey: "cname",
-    header: "Domain",
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ getValue }) => {
-      const status = getValue<Status>();
-
-      const statusIcon =
-        status === "active" ? (
-          <CheckCircleIcon className="text-green-500" />
-        ) : status === "disabled" ? (
-          <XCircleIcon className="text-red-500" />
-        ) : status === "provisioning" ? (
-          <ClockIcon className="text-green-700" />
-        ) : (
-          <ExclamationCircleIcon className="text-orange-500" />
-        );
-
-      return (
-        <Button variant="outline" size="sm">
-          {statusIcon}
-          <span className="capitalize">{status}</span>
-        </Button>
-      );
-    },
-  },
-  {
-    header: "Date Modified",
-    cell: ({ getValue }) => {
-      const date = getValue<Date>();
-      return <span>{dayjs(date).format("MMM D, YYYY")}</span>;
-    },
-  },
-  {
-    header: "Time Modified",
-    cell: ({ getValue }) => {
-      const date = getValue<Date>();
-      return <span>{dayjs(date).format("h:mm A")}</span>;
-    },
-  },
-];
-
 const DataTableWrapper = () => {
   const [pageIndex, setPageIndex] = useQueryState(
     "page",
     parseAsInteger.withDefault(1)
   );
-
   const [pageSize, setPageSize] = useQueryState(
     "limit",
     parseAsInteger.withDefault(10)
   );
-
   const [status, setStatus] = useQueryState(
     "status",
     parseAsArrayOf(parseAsString).withDefault([])
   );
-
   const [priority, setPriority] = useQueryState(
     "priority",
     parseAsArrayOf(parseAsString).withDefault([])
   );
-
   const [search, setSearch] = useQueryState(
     "search",
     parseAsString.withDefault("")
   );
-
   const [dateRange, setDateRange] = useQueryState(
     "dateRange",
     parseAsString.withDefault("")
   );
+  const [sort, setSort] = useQueryState(
+    "sort",
+    parseAsString.withDefault("created_at")
+  );
+
+  const columns: ColumnDef<Distribution>[] = [
+    {
+      accessorKey: "name",
+      header: () => (
+        <Button
+          variant="ghost"
+          onClick={() =>
+            setSort((prev) => (prev === "name" ? "-name" : "name"))
+          }
+          className="flex items-center gap-1 hover:bg-transparent px-0"
+        >
+          Name
+          {sort === "" || sort === "name" || sort === "-name"
+            ? sort.startsWith("-")
+              ? " ↓"
+              : " ↑"
+            : null}
+        </Button>
+      ),
+    },
+    {
+      accessorKey: "cname",
+      header: () => (
+        <Button
+          variant="ghost"
+          onClick={() =>
+            setSort((prev) => (prev === "cname" ? "-cname" : "cname"))
+          }
+          className="flex items-center gap-1 px-0 hover:bg-transparent"
+        >
+          Domain
+          {sort.replace("-", "") === "cname"
+            ? sort.startsWith("-")
+              ? " ↓"
+              : " ↑"
+            : null}
+        </Button>
+      ),
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ getValue }) => {
+        const status = getValue<Status>();
+        const statusIcon =
+          status === "active" ? (
+            <CheckCircleIcon className="text-green-500" />
+          ) : status === "disabled" ? (
+            <XCircleIcon className="text-red-500" />
+          ) : status === "provisioning" ? (
+            <ClockIcon className="text-green-700" />
+          ) : (
+            <ExclamationCircleIcon className="text-orange-500" />
+          );
+        return (
+          <Button variant="outline" size="sm">
+            {statusIcon}
+            <span className="capitalize">{status}</span>
+          </Button>
+        );
+      },
+    },
+    {
+      accessorKey: "created_at",
+      header: () => {
+        const field = "created_at";
+        const isSortedAsc = sort === field;
+        const isSortedDesc = sort === "-" + field;
+
+        return (
+          <Button
+            variant="ghost"
+            onClick={() =>
+              setSort((prev) => (prev === field ? "-" + field : field))
+            }
+            className="flex items-center gap-1 px-0 hover:bg-transparent"
+          >
+            Date Modified
+            {isSortedAsc ? " ↑" : isSortedDesc ? " ↓" : " ↑"}
+          </Button>
+        );
+      },
+      cell: ({ getValue }) => {
+        const date = getValue<Date>();
+        return <span>{dayjs(date).format("MMM D, YYYY")}</span>;
+      },
+    },
+    {
+      header: "Time Modified",
+      cell: ({ getValue }) => {
+        const date = getValue<Date>();
+        return <span>{dayjs(date).format("h:mm A")}</span>;
+      },
+    },
+  ];
 
   const { data, error, isLoading } = useQuery({
     queryKey: [
@@ -115,8 +160,8 @@ const DataTableWrapper = () => {
       priority,
       search,
       dateRange,
+      sort,
     ],
-
     queryFn: () => {
       const params = buildQueryParams({
         page: pageIndex,
@@ -125,22 +170,14 @@ const DataTableWrapper = () => {
         status,
         priority,
         dateRange,
+        sort,
       });
-
       return getData<DistributionResponse>("/distributions", params);
     },
   });
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!data?.success || error) {
-    return <div>Error loading data</div>;
-  }
-
   return (
-    <>
+    <div className="flex flex-col gap-4 min-h-[87vh]">
       <Filters
         search={search}
         status={status}
@@ -152,19 +189,20 @@ const DataTableWrapper = () => {
         setDateRange={setDateRange}
       />
       <DataTable
-        data={data.data}
+        data={data?.data ?? []}
         columns={columns}
         pageSize={pageSize}
+        error={error}
         pageIndex={pageIndex}
         isLoading={isLoading}
         onPageChange={setPageIndex}
-        pageCount={data.meta.pagination.total_pages}
+        pageCount={data?.meta.pagination.total_pages ?? 0}
         onPageSizeChange={(size) => {
           setPageSize(size);
           setPageIndex(pageIndex);
         }}
         classes={{
-          wrapper: "w-full my-10",
+          wrapper: "flex-1",
         }}
       />
       <CustomPagination
@@ -172,9 +210,9 @@ const DataTableWrapper = () => {
         pageIndex={pageIndex}
         onPageChange={setPageIndex}
         onPageSizeChange={setPageSize}
-        pageCount={data.meta.pagination.total_pages}
+        pageCount={data?.meta.pagination.total_pages ?? 0}
       />
-    </>
+    </div>
   );
 };
 
